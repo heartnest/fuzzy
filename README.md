@@ -12,5 +12,5 @@ Source of the Streets in Paris: http://en.wikipedia.org/wiki/User:ThePromenader/
 
 we wrote ajax scripts which extract the street names from the source html and store them in json.
 
-we run leventhtein distace algorithm to calculate the distance between input and street names in our database,
+we run levenshtein distance algorithm to calculate the distance between input and street names in our database,
 we then choose the name with lowest distance to be the adviced address.

@@ -1,0 +1,32 @@
+/* Global general param
+-------------------------------------------------- */
+/* components */
+
+*{
+  margin:0;padding:0;    
+}
+
+html,body{
+  height:100%;
+  width:100%;
+}
+
+body {
+  display:table;
+  background-color: #eee;
+  font-family: 'Open Sans',sans-serif;
+  box-shadow: inset 0 0 110px rgba(0,0,0,.5);
+
+}
+
+.container {
+ max-width: 680px;
+}
+
+.text-muted {
+  margin: 20px 0;
+}
+.text-muted a{
+  text-decoration: none;
+  color: #999999;
+}
