@@ -15,15 +15,15 @@
 	<meta name="author" content="liu tong">
 	<link rel="shortcut icon" href="favicon.ico">
 
-	<script type='text/javascript' src='js/lib/jquery-1.7.2.min.js'></script>
-	<link type='text/css' href='css/bootstrap.css' rel='stylesheet' />
-	<script type='text/javascript' src='js/lib/bootstrap.min.js'></script>
+	<script type='text/javascript' src='../js/lib/jquery-1.7.2.min.js'></script>
+	<link type='text/css' href='../css/bootstrap.css' rel='stylesheet' />
+	<script type='text/javascript' src='../js/lib/bootstrap.min.js'></script>
 
-	<link href="css/style.css" rel="stylesheet">
+	<link href="../css/style.css" rel="stylesheet">
 </head>
 
 <body >
-	<h1 class="text-center">Fuzzy Search</h1>
+	<h1 class="text-center">Fuzzy Search(test)</h1>
 	<div class='container'>
 		
 		<div class="form-group">
@@ -31,20 +31,19 @@
 			<input type="text" class="form-control" id="indirizzoinput" placeholder="inserire un posto">
 		</div>
 		<button id="conferma"  class="btn btn-default">Conferma</button>
-		
-	</div>
-	<div class='container'>
-	<div class="lista well"></div>
+
+		<div class="lista well"></div>
 	</div>
 
 </div>
 
 <div id="footer">
 	<div class="container">
-		<div class="text-muted text-center"> <a href="tables.php">Levenshtein Distance Algorithm(JS)</a></div>
+		<div class="text-muted text-center">A test between different kinds of levenshtein algorithm implementations</div>
 	</div>
 </div>
 
 </body>
-<script type='text/javascript' src='js/levenshtein.js'></script>
+<script type='text/javascript' src='leve.js'></script>
+<script type='text/javascript' src='test.js'></script>
 </html>
