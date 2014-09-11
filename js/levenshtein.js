@@ -1,56 +1,67 @@
 $(function(){
 
-var a = new Array("via agonale","via anicia","via arenula","piazza belli","via bixio n.","via bramante","via canova");
+//var a = new Array("via agonale","via anicia","via arenula","piazza belli","via bixio n.","via bramante","via canova");
+ arr = new Array();
+var resArr = new Array("word",1000);
+//alert(3)
 
-$(a).each(function(){
-    $(".lista").append("<div>"+this+"</div>");
-})
+$.getJSON("json/Bo_php.json", function( json ) {
+  $(json).each(function(){
+    arr.push(this);
+  })
+});
 
 $("#conferma").click(function(){
   var ind = $("#indirizzoinput").val();
+   alert(ind+" "+arr.length);
+   $(arr).each(function(){
+     var dis = levenshtein2(ind,this);
+     var dis = 3;
+     if (dis < resArr[1]) {
+       resArr[0] = this;
+       resArr[1] = dis;
+     };
+     $(".lista").append("<div>"+ind+" and "+this+" distance "+dis+"</div>");
+  })
 
-  $(a).each(function(){
-    var dis = levenshteinDistance(ind,this);
-    $(".lista").append("<div>"+ind+" and "+this+" distance "+dis+"</div>");
+
+//$(".lista").append("<div>Maybe you are searching:"+resArr[0]+" distance from you word"+resArr[1]+"</div>")
 })
 
-  //alert(ind)
-  
-})
-
 })
 
 
-function levenshteinDistance (s, t) {
-        if (s.length === 0) return t.length;
-        if (t.length === 0) return s.length;
- 
-        return Math.min(
-                levenshteinDistance(s.substr(1), t) + 1,
-                levenshteinDistance(t.substr(1), s) + 1,
-                levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
-        );
+function levenshtein1 (s, t) {
+   $(".lista").append("<div>run</div>");
+  if (s.length === 0) return t.length;
+  if (t.length === 0) return s.length;
+
+  return Math.min(
+    levenshteinDistance(s.substr(1), t) + 1,
+    levenshteinDistance(t.substr(1), s) + 1,
+    levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
+    );
 }
 
 // Compute the edit distance between the two given strings
-function getEditDistance(a, b) {
+function levenshtein2(a, b) {
   if(a.length === 0) return b.length; 
   if(b.length === 0) return a.length; 
- 
+
   var matrix = [];
- 
+
   // increment along the first column of each row
   var i;
   for(i = 0; i <= b.length; i++){
     matrix[i] = [i];
   }
- 
+
   // increment each column in the first row
   var j;
   for(j = 0; j <= a.length; j++){
     matrix[0][j] = j;
   }
- 
+
   // Fill in the rest of the matrix
   for(i = 1; i <= b.length; i++){
     for(j = 1; j <= a.length; j++){
@@ -63,12 +74,35 @@ function getEditDistance(a, b) {
       }
     }
   }
- 
+
   return matrix[b.length][a.length];
 };
 
+function levenshtein3(u, v) {
+  var m = u.length;
+  var n = v.length;
+  var D = [];
+  for(var i = 0; i <= m; i++) {
+    D.push([]);
+    for(var j = 0; j <= n; j++) {
+      D[i][j] = 0;
+    }
+  }
+  for(var i = 1; i <= m; i++) {
+    for(var j = 1; j <= n; j++) {
+      if (j == 0) {
+        D[i][j] = i;
+      } else if (i == 0) {
+        D[i][j] = j;
+      } else {
+        D[i][j] = [D[i-1][j-1] + (u[i-1] != v[j-1]), D[i][j-1] + 1, D[i-1][j] + 1].sort()[0];
+      }
+    }
+  }
+  return D[m][n];
+};
 
-function levenshtein3(s1, s2) {
+function levenshtein4(s1, s2) {
   //       discuss at: http://phpjs.org/functions/levenshtein/
   //      original by: Carlos R. L. Rodrigues (http://www.jsfromhell.com)
   //      bugfixed by: Onno Marsman
@@ -108,13 +142,13 @@ function levenshtein3(s1, s2) {
   var v1 = new Array(s1_len + 1);
 
   var s1_idx = 0,
-    s2_idx = 0,
-    cost = 0;
+  s2_idx = 0,
+  cost = 0;
   for (s1_idx = 0; s1_idx < s1_len + 1; s1_idx++) {
     v0[s1_idx] = s1_idx;
   }
   var char_s1 = '',
-    char_s2 = '';
+  char_s2 = '';
   for (s2_idx = 1; s2_idx <= s2_len; s2_idx++) {
     v1[0] = s2_idx;
     char_s2 = s2[s2_idx - 1];
@@ -141,7 +175,7 @@ function levenshtein3(s1, s2) {
 }
 
 //http://www.merriampark.com/ld.htm, http://www.mgilleland.com/ld/ldjavascript.htm, Damerau–Levenshtein distance (Wikipedia)
-var levDistz = function(s, t) {
+function levenshtein5(s, t) {
     var d = []; //2d matrix
 
     // Step 1
@@ -155,12 +189,12 @@ var levDistz = function(s, t) {
     for (var i = n; i >= 0; i--) d[i] = [];
 
     // Step 2
-    for (var i = n; i >= 0; i--) d[i][0] = i;
+  for (var i = n; i >= 0; i--) d[i][0] = i;
     for (var j = m; j >= 0; j--) d[0][j] = j;
 
     // Step 3
-    for (var i = 1; i <= n; i++) {
-        var s_i = s.charAt(i - 1);
+  for (var i = 1; i <= n; i++) {
+    var s_i = s.charAt(i - 1);
 
         // Step 4
         for (var j = 1; j <= m; j++) {
@@ -183,12 +217,12 @@ var levDistz = function(s, t) {
 
             //Damerau transposition
             if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
-                d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
+              d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
             }
+          }
         }
-    }
 
     // Step 7
     return d[n][m];
-}
+  }
 
