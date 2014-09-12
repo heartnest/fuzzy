@@ -4,12 +4,16 @@
 //
 
 
-$filename = "../json/file.json";
+$filename = "../json/Bo_php.json";
 $json = json_decode(file_get_contents($filename), true);
-echo " aaa $json";
+
 foreach($json as $msg)
 {
-    echo $msg."<br />";
+	if (count(split(' ',$msg))>3) {
+		# code...
+		echo $msg."<br />";
+	}
+    
 }
 
 ?>
