@@ -46,18 +46,18 @@ foreach ($words as $word) {
     }
 }
 
-$formattedaddress= $pnum." ".$closest ;
+$formattedaddress= $pnum." ".$closest;
 
 $time_end = microtime(true);
 $time = round(($time_end - $time_start)*1000,2);
 
-$geo = geocode($formattedaddress);
+$geo = geocode($closest,$pnum);
 
 $arr['time'] = $time;
 $arr['addr'] = $closest;
 $arr['dist'] = $shortest;
 $arr['geocode'] = $geo;
-$arr['addrurl'] = getUrlFromAddr($formattedaddress);
+$arr['addrurl'] = getUrlFromAddr($closest,$pnum);
 
 
 //echo "$input <span class='glyphicon glyphicon-arrow-right'></span> $closest (Dist: $shortest Time:$time ms)<br/>";
@@ -80,32 +80,36 @@ function accuratelev($a,$b){
 
     foreach($splitteda as $sa)
     {
-        $tmplev = -1;
+        if (trim($sa) != "") {
+            $tmplev = -1;
 
-        foreach($splittedb as $sb)
-        {
-            $localev = levenshtein($sa,$sb,1,10,10);
-            if ($localev < $tmplev || $tmplev<0) {
-                $tmplev = $localev;
+            foreach($splittedb as $sb)
+            {
+                //1 insertion 10 substition 10 deletion
+                $localev = levenshtein($sa,$sb,1,10,10);
+                if ($localev < $tmplev || $tmplev<0) {
+                    $tmplev = $localev;
+                }
             }
-        }
 
-        $totaldistance += $tmplev;
+            $totaldistance += $tmplev;
+        }
+        
     }
     return $totaldistance;
 }
 
-function geocode($addr){
-   // $url = "http://nominatim.openstreetmap.org/search/33%20viale%20oriani%20alfredo,%20bologna?format=json&polygon=1&addressdetails=1";
-//    $url = "http://nominatim.openstreetmap.org/search/".rawurlencode($addr).",%20bologna?format=json&polygon=1&addressdetails=1";
-    $url = getUrlFromAddr($addr);
+function geocode($street,$num){
+    $url = getUrlFromAddr($street,$num);
     $json = json_decode(file_get_contents($url), true);
 
     return $json[0]["lat"].",".$json[0]["lon"];
 }
 
-function getUrlFromAddr($addr){
-    $url = "http://nominatim.openstreetmap.org/search/".rawurlencode($addr).",%20bologna?format=json&polygon=1&addressdetails=1";
+function getUrlFromAddr($street,$num){
+    $addr = $num." ".$street;
+    //$url = "http://nominatim.openstreetmap.org/search/".rawurlencode($addr).",%20bologna?format=json";
+    $url = "http://nominatim.openstreetmap.org/search/bologna/".rawurlencode($street)."/".$num."?format=json";
     return $url;
 }
 

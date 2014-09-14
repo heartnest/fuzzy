@@ -12,7 +12,7 @@ $(function(){
 
       var ind = $("#indirizzoinput").val();
 
-      $(".debuglog").append(""+arr.length+" records <br />");
+      $(".debuglog").append(""+arr.length+" records scanned<br />");
       
       //js calculate
       //calc(ind);
@@ -33,12 +33,12 @@ $(function(){
     $("#debug").click(function(){
         if (!$(this).hasClass("debugging")) {
           $(this).addClass("debugging");
-          $(this).text("STOP debug");
+          $(this).text("Hide debug");
           $(".debuglog").show();
           
         }else{
           $(".debuglog").hide();
-          $(this).text("debug");
+          $(this).text("Show debug");
           $(this).removeClass("debugging");
         }
     })
@@ -79,11 +79,17 @@ $(".debuglog").append("<div>"+ind+" <span class='glyphicon glyphicon-arrow-right
       var dist = arr.dist;
       var geocode = arr.geocode;
       var url = arr.addrurl;
+
       //alert(arr.addr)
-      $(".debuglog").append("<div>geo: "+geocode+" ; "+q+" <span class='glyphicon glyphicon-arrow-right'></span> "+addr+" (Dist: "+dist+" Time:"+time+" ms)</div>");
-      $(".debuglog").append("<div>"+url+"</div><br/>");
+      $(".debuglog").append("<div>"+q+" <span class='glyphicon glyphicon-arrow-right'></span> "+addr+" (Dist: "+dist+" Ex Time:"+time+" ms)</div>");
+      $(".debuglog").append("<div>"+url+"</div>");
+      $(".debuglog").append("<div>geocode:"+geocode+"</div><br/>");
       //alert(rip)
+      var spd = geocode.split(",");
+      if ($.trim(spd[0]) != "")
       refreshMap(geocode);
+      else
+        alert("Openstreetmaps non riesce a fornire coordinate per "+addr);
     },
     error: function(request, status, error){
       alert("err"+error);
