@@ -12,7 +12,7 @@ $(function(){
 
       var ind = $("#indirizzoinput").val();
 
-      $(".lista").append(""+arr.length+" records <br />");
+      $(".debuglog").append(""+arr.length+" records <br />");
       
       //js calculate
       //calc(ind);
@@ -20,7 +20,28 @@ $(function(){
       //php calculate
       call_leven(ind);
 
+
+      //1111111111111111
+
+
+
+      //1111111111111111
+
     });
+
+    $(".debuglog").hide();
+    $("#debug").click(function(){
+        if (!$(this).hasClass("debugging")) {
+          $(this).addClass("debugging");
+          $(this).text("STOP debug");
+          $(".debuglog").show();
+          
+        }else{
+          $(".debuglog").hide();
+          $(this).text("debug");
+          $(this).removeClass("debugging");
+        }
+    })
 
 });
 
@@ -37,7 +58,7 @@ var resArr = new Array("word",1000);
   })
 var end = new Date().getTime();
 var time = end - start;
-$(".lista").append("<div>"+ind+" <span class='glyphicon glyphicon-arrow-right'></span> "+resArr[0]+" (Dist: "+resArr[1]+" Time:"+time+" ms )</div>");
+$(".debuglog").append("<div>"+ind+" <span class='glyphicon glyphicon-arrow-right'></span> "+resArr[0]+" (Dist: "+resArr[1]+" Time:"+time+" ms )</div>");
 
 
 }
@@ -52,7 +73,17 @@ $(".lista").append("<div>"+ind+" <span class='glyphicon glyphicon-arrow-right'><
         query:q
       },
       success: function(rip) {
-      $(".lista").append("<div>"+rip+"</div>");
+      var arr = jQuery.parseJSON(rip);
+      var addr = arr.addr;
+      var time = arr.time;
+      var dist = arr.dist;
+      var geocode = arr.geocode;
+      var url = arr.addrurl;
+      //alert(arr.addr)
+      $(".debuglog").append("<div>geo: "+geocode+" ; "+q+" <span class='glyphicon glyphicon-arrow-right'></span> "+addr+" (Dist: "+dist+" Time:"+time+" ms)</div>");
+      $(".debuglog").append("<div>"+url+"</div><br/>");
+      //alert(rip)
+      refreshMap(geocode);
     },
     error: function(request, status, error){
       alert("err"+error);
@@ -112,4 +143,25 @@ function lev(s1, s2) {
     v1 = v_tmp;
   }
   return v0[s1_len];
+}
+
+function refreshMap(geocode){
+    var splitted = geocode.split(",");
+    map.addLayer(new OpenLayers.Layer.OSM());
+
+    var lonLat = new OpenLayers.LonLat(parseFloat(splitted[1]),parseFloat(splitted[0]))
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+          
+    var zoom=16;
+
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+
+    map.addLayer(markers);
+    
+    markers.addMarker(new OpenLayers.Marker(lonLat));
+    
+    map.setCenter (lonLat, zoom);
 }
