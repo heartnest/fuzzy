@@ -12,7 +12,6 @@ $(function(){
 
       var ind = $("#indirizzoinput").val();
 
-      $(".debuglog").append(""+arr.length+" records scanned<br />");
       
       //js calculate
       //calc(ind);
@@ -35,11 +34,13 @@ $(function(){
           $(this).addClass("debugging");
           $(this).text("Hide debug");
           $(".debuglog").show();
+          $(".mapdiv_wrapper").hide();
           
         }else{
           $(".debuglog").hide();
           $(this).text("Show debug");
           $(this).removeClass("debugging");
+          $(".mapdiv_wrapper").show();
         }
     })
 
@@ -89,7 +90,7 @@ $(".debuglog").append("<div>"+ind+" <span class='glyphicon glyphicon-arrow-right
       if ($.trim(spd[0]) != "")
       refreshMap(geocode);
       else
-        alert("Openstreetmaps non riesce a fornire coordinate per "+addr);
+        alert(addr+ " could not be interpretated by openstreetmap server");
     },
     error: function(request, status, error){
       alert("err"+error);
