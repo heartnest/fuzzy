@@ -5,8 +5,11 @@
 
 $arr = array();
 $filename = "../json/Bo_php.json";
+$paris_filename = "../json/Paris_php.json";
+
 $input = $_GET['query'];
 $words = json_decode(file_get_contents($filename), true);
+$paris_words = json_decode(file_get_contents($paris_filename), true);
 
 $splitted = split(" ",$input);
 
@@ -23,16 +26,17 @@ foreach ($splitted as $item) {
 
 $input = trim($pstr);
 
-#===============================================
+#=============================================== begin
 $time_start = microtime(true);
 
 $shortest = -1;
+$count = 0;
+$city = "bologna"; // default city is Bologna
 
-// loop through words to find the closest
+//search bologna
 foreach ($words as $word) {
     //$lev = levenshtein($input, $word,1,10,10);
     $lev = accuratelev($input, $word);
-    //similar_text($input, $word, $lev); 
     if ($lev == 0) {
 
         // closest word is this one (exact match)
@@ -44,23 +48,44 @@ foreach ($words as $word) {
         $closest  = $word;
         $shortest = $lev;
     }
+    $count++;
 }
+
+//search paris
+foreach ($paris_words as $pword) {
+    $lev = accuratelev($input, $pword);
+    if ($lev == 0) {
+        $closest = $pword;
+        $shortest = 0;
+        $city = "paris";
+        break;
+    }
+    if ($lev < $shortest || $shortest < 0) {
+        $closest  = $pword;
+        $shortest = $lev;
+        $city = "paris";
+    }
+    $count++;
+}
+
 
 $formattedaddress= $pnum." ".$closest;
 
 $time_end = microtime(true);
 $time = round(($time_end - $time_start)*1000,2);
+#=============================================== end
 
-$geo = geocode($closest,$pnum);
+//$geo = geocode($closest,$pnum);
+$geo = geocodeByCity($closest,$pnum,$city);
 
 $arr['time'] = $time;
 $arr['addr'] = $closest;
-$arr['dist'] = $shortest;
+$arr['dist'] = $shortest." cnt:".$count;
 $arr['geocode'] = $geo;
-$arr['addrurl'] = getUrlFromAddr($closest,$pnum);
+//$arr['addrurl'] = getUrlFromAddr($closest,$pnum);
+$arr['addrurl'] = getUrlFromAddrAndCity($closest,$pnum,$city);
 
 
-//echo "$input <span class='glyphicon glyphicon-arrow-right'></span> $closest (Dist: $shortest Time:$time ms)<br/>";
 echo json_encode($arr);
 
 
@@ -98,6 +123,21 @@ function accuratelev($a,$b){
     }
     return $totaldistance;
 }
+
+function geocodeByCity($street,$num,$city){
+    $url = getUrlFromAddrAndCity($street,$num,$city);
+    $json = json_decode(file_get_contents($url), true);
+
+    return $json[0]["lat"].",".$json[0]["lon"];
+}
+
+function getUrlFromAddrAndCity($street,$num,$city){
+    $addr = $num." ".$street;
+    //$url = "http://nominatim.openstreetmap.org/search/".rawurlencode($addr).",%20bologna?format=json";
+    $url = "http://nominatim.openstreetmap.org/search/$city/".rawurlencode($street)."/".$num."?format=json";
+    return $url;
+}
+
 
 function geocode($street,$num){
     $url = getUrlFromAddr($street,$num);
