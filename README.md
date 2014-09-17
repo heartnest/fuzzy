@@ -54,7 +54,7 @@ Not Matched:
 - zzzzzz
 
 
-issues remained(cannot find):
+issues(cannot find, solved on 17 sep):
 - via giuseppe massarenti
 - possible reason, osm encoded these names with different format or order, so it could not return a valid coordinate.
 
