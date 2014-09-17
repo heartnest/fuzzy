@@ -3,6 +3,8 @@
 // This script reads road names from json file
 //
 
+session_start();
+
 $arr = array();
 $filename = "../json/Bo_php.json";
 $paris_filename = "../json/Paris_php.json";
@@ -83,7 +85,7 @@ $arr['addr'] = $closest;
 $arr['dist'] = $shortest." cnt:".$count;
 $arr['geocode'] = $geo;
 //$arr['addrurl'] = getUrlFromAddr($closest,$pnum);
-$arr['addrurl'] = getUrlFromAddrAndCity($closest,$pnum,$city);
+$arr['addrurl'] = $_SESSION['addrurl'];
 
 
 echo json_encode($arr);
@@ -128,12 +130,36 @@ function geocodeByCity($street,$num,$city){
     $url = getUrlFromAddrAndCity($street,$num,$city);
     $json = json_decode(file_get_contents($url), true);
 
+    if ($json[0]["lat"] == null) {
+       $url = getUrlFromAddrAndCity2($street,$num,$city);
+       $json = json_decode(file_get_contents($url), true);
+    }
+
+    $_SESSION['addrurl'] = $url; 
     return $json[0]["lat"].",".$json[0]["lon"];
 }
 
 function getUrlFromAddrAndCity($street,$num,$city){
     $addr = $num." ".$street;
     //$url = "http://nominatim.openstreetmap.org/search/".rawurlencode($addr).",%20bologna?format=json";
+    $url = "http://nominatim.openstreetmap.org/search/$city/".rawurlencode($street)."/".$num."?format=json";
+    return $url;
+}
+
+function getUrlFromAddrAndCity2($street,$num,$city){
+
+    $splitted = split(" ",$street);
+
+    $street = "";
+    for ($i=0; $i < count($splitted) -1 ; $i++) { 
+        if ( $i == count($splitted) -2) {
+            $street .= $splitted[$i+1]." ".$splitted[$i];
+            break;
+        }else
+        $street .= $splitted[$i]." ";
+    }
+    $street = trim($street);
+
     $url = "http://nominatim.openstreetmap.org/search/$city/".rawurlencode($street)."/".$num."?format=json";
     return $url;
 }

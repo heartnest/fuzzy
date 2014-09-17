@@ -27,7 +27,8 @@
  		    margin-left: auto;
   		    margin-right: auto;
 		    width: 90%;
-		    height: 80%; 
+		   /* height: 80%; */
+		   height: 450px;
 
 			background-color: #FFF;
 		    -moz-box-shadow: 0px 1px 2px #9f9f9f;
@@ -92,7 +93,6 @@
 
 <div id="footer">
 	<div class="container">
- 
 		<div class="text-muted text-center"> <a href="tables.php">Fuzzy Search implemented with Levenshtein Distance Algorithm(PHP)</a></div>
 	</div>
 </div>

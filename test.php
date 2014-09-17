@@ -26,21 +26,56 @@
 
 // echo rawurlencode('viale oriani alfredo 33');
 
-$str = "viale 12 alfredo oriani";
+$str = "viale 12";
 
-$splitted = split(" ",$str);
+// $splitted = split(" ",$str);
 
-$pstr = "";
-$pnum = "";
-foreach ($splitted as $item) {
-	if (is_numeric($item)) {
-		$pnum = $item;
-	}else{
-		$pstr .= $item." ";
-	}
+// $street = "";
+// for ($i=0; $i < count($splitted) -1 ; $i++) { 
+// 	if ( $i == count($splitted) -2) {
+// 		$street .= $splitted[$i+1]." ".$splitted[$i];
+// 		break;
+// 	}else
+// 	$street .= $splitted[$i]." ";
+// }
+// $street = trim($street);
+// echo "$street";
+
+$x = getUrlFromAddrAndCity2("via gusto righi",3,'bo');
+echo "$x";
+
+// $pstr = "";
+// $pnum = "";
+// foreach ($splitted as $item) {
+// 	if (is_numeric($item)) {
+// 		$pnum = $item;
+// 	}else{
+// 		$pstr .= $item." ";
+// 	}
+// }
+//echo trim($pnum." ".$pstr);
+
+
+function getUrlFromAddrAndCity2($street,$num,$city){
+
+    $splitted = split(" ",$street);
+echo "aa ".count($splitted);
+    $street = "";
+    for ($i=0; $i < count($splitted) -1 ; $i++) { 
+echo "$i aa ";
+        if ( $i == count($splitted) -2) {
+            $street .= $splitted[$i+1]." ".$splitted[$i];
+            break;
+        }else
+        $street .= $splitted[$i]." ";
+
+        echo "$street";
+    }
+    $street = trim($street);
+
+    $url = "http://nominatim.openstreetmap.org/search/$city/".rawurlencode($street)."/".$num."?format=json";
+    return $url;
 }
-echo trim($pnum." ".$pstr);
-
 //================== cal lev ==================
 
 function accuratelev($a,$b){

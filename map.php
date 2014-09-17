@@ -22,7 +22,7 @@
 	<link href="css/style.css" rel="stylesheet">
 	  <style type="text/css">
     html, body, #mapdiv {
-        width:90%; height:90%; margin:auto;
+        width:90%; height: 500px; margin:auto;
     }
   </style>
 </head>
