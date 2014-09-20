@@ -28,7 +28,7 @@
   		    margin-right: auto;
 		    width: 90%;
 		   /* height: 80%; */
-		   height: 450px;
+		    /*height: 450px;*/
 
 			background-color: #FFF;
 		    -moz-box-shadow: 0px 1px 2px #9f9f9f;

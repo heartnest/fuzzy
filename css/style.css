@@ -29,4 +29,22 @@ body {
   color: #999999;
 }
 
+@media (max-width: 480px) {
+   .mapdiv_wrapper{
+
+        height: 70%;
+
+  }
+  
+}
+ /* Landscape phones and portrait tablets and more */
+@media (min-width: 480px) {
+.mapdiv_wrapper{
+height: 450px;
+
+ }
+
+}
+
+
 input[type='text'],input[type='number'],textarea,select {font-size:16px;}
