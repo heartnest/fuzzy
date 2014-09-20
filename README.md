@@ -54,9 +54,8 @@ Not Matched:
 - zzzzzz
 
 
-issues remained(cannot find):
-- via giuseppe massarenti
-- possible reason, osm encoded these names with different format or order, so it could not return a valid coordinate.
+issues(solved on 17th Sep):
+- address via massarenti giuseppe could not be found at first because osm encoded these names with a different order,  now if osm server gives a empty answer, php will try to request with an inversed address, ie, via giuseppe massarenti.
 
 
 Relevant refs:
